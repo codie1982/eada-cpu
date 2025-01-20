@@ -1,44 +1,30 @@
-/** Search result object. */
-export interface SearchResult {
-    /** Distances of the nearest neighbors found, size n*k. */
-    distances: number[];
-    /** Labels of the nearest neighbors found, size n*k. */
-    labels: number[];
-}
-
-/**
- * FAISS-based KNN Search API
- */
-export declare class EadaCPU {
+declare module "EADA" {
     /**
-     * Creates an index with given dimensions.
-     * @param {number} dims The number of dimensions for the vector.
+     * Adds data to the FAISS HNSW index.
+     * @param data - A 2D array of vectors with D dimensions.
+     * @returns Operation result message.
      */
-    constructor(dims: number);
+    export function indexKNN(data: number[][]): Promise<string>;
 
     /**
-     * Adds vectors to the index.
-     * @param {number[][]} vectors A 2D array of vectors to add.
+     * Searches for the k nearest neighbors in the FAISS HNSW index.
+     * @param query - The vector to search (an array of D dimensions).
+     * @param k - Number of neighbors to return.
+     * @returns A list of k nearest neighbors with id and distance.
      */
-    add(vectors: number[][]): void;
+    export function searchKNN(query: number[], k: number): Promise<Array<{ id: number; distance: number }>>;
 
     /**
-     * Performs a KNN search on the index.
-     * @param {number[]} queryVector The input vector for search.
-     * @param {number} k The number of nearest neighbors to find.
-     * @returns {SearchResult} The search result with distances and labels.
+     * Loads a saved FAISS index file.
+     * @param filename - The name of the index file to load.
+     * @returns Operation result message.
      */
-    search(queryVector: number[], k: number): SearchResult;
+    export function loadIndex(filename: string): Promise<string>;
 
     /**
-     * Saves the index to a file.
-     * @param {string} filePath Path to save the index file.
+     * Saves the current FAISS index to a file.
+     * @param filename - The name of the file to save (optional).
+     * @returns Operation result message.
      */
-    saveIndex(filePath: string): void;
-
-    /**
-     * Loads the index from a file.
-     * @param {string} filePath Path to load the index file from.
-     */
-    loadIndex(filePath: string): void;
+    export function saveIndex(filename?: string): Promise<string>;
 }

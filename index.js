@@ -1,58 +1,73 @@
 const eada = require("bindings")("eada");
 
 /**
- * EADA-CPU: FAISS-based high-performance KNN search for Node.js
+ * Adds data to the FAISS HNSW index.
+ * @param {number[][]} data - A 2D array of vectors with D dimensions.
+ * @returns {Promise<string>} Operation result message.
  */
+function indexKNN(data) {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = eada.indexKNN(data);
+            resolve(result);
+        } catch (error) {
+            reject(`Error in indexKNN: ${error.message}`);
+        }
+    });
+}
+
+/**
+ * Searches for the k nearest neighbors in the FAISS HNSW index.
+ * @param {number[]} query - The vector to search (an array of D dimensions).
+ * @param {number} k - Number of neighbors to return.
+ * @returns {Promise<Array<{ id: number; distance: number }>>} A list of k nearest neighbors with id and distance.
+ */
+function searchKNN(query, k) {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = eada.searchKNN(query, k);
+            resolve(result);
+        } catch (error) {
+            reject(`Error in searchKNN: ${error.message}`);
+        }
+    });
+}
+
+/**
+ * Loads a saved FAISS index file.
+ * @param {string} filename - The name of the index file to load.
+ * @returns {Promise<string>} Operation result message.
+ */
+function loadIndex(filename) {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = eada.loadIndex(filename);
+            resolve(result);
+        } catch (error) {
+            reject(`Error in loadIndex: ${error.message}`);
+        }
+    });
+}
+
+/**
+ * Saves the current FAISS index to a file.
+ * @param {string} [filename] - The name of the file to save (optional).
+ * @returns {Promise<string>} Operation result message.
+ */
+function saveIndex(filename) {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = eada.saveIndex(filename);
+            resolve(result);
+        } catch (error) {
+            reject(`Error in saveIndex: ${error.message}`);
+        }
+    });
+}
+
 module.exports = {
-  /**
-   * Create a new index and add data.
-   * @param {number[][]} data A 2D array where each row is a vector.
-   * @returns {boolean} True if indexing is successful.
-   */
-  indexKNN: (data) => {
-    if (!Array.isArray(data) || !data.length) {
-      throw new Error("Invalid input: Expected a 2D array of vectors.");
-    }
-    return eada.indexKNN(data);
-  },
-
-  /**
-   * Perform KNN search on the indexed data.
-   * @param {number[]} queryVector The input query vector.
-   * @param {number} k The number of nearest neighbors to find.
-   * @returns {Object[]} An array of nearest neighbors with {id, distance}.
-   */
-  searchKNN: (queryVector, k) => {
-    if (!Array.isArray(queryVector) || queryVector.length === 0) {
-      throw new Error("Invalid query: Expected a vector as input.");
-    }
-    if (typeof k !== "number" || k <= 0) {
-      throw new Error("Invalid k: Expected a positive integer.");
-    }
-    return eada.searchKNN(queryVector, k);
-  },
-
-  /**
-   * Load an existing FAISS index from a file.
-   * @param {string} filePath Path to the index file.
-   * @returns {boolean} True if the index was successfully loaded.
-   */
-  loadIndex: (filePath) => {
-    if (typeof filePath !== "string" || filePath.trim() === "") {
-      throw new Error("Invalid file path.");
-    }
-    return eada.loadIndex(filePath);
-  },
-
-  /**
-   * Save the current index to a file.
-   * @param {string} filePath Path to save the index file.
-   * @returns {boolean} True if the index was successfully saved.
-   */
-  saveIndex: (filePath) => {
-    if (typeof filePath !== "string" || filePath.trim() === "") {
-      throw new Error("Invalid file path.");
-    }
-    return eada.saveIndex(filePath);
-  },
+    indexKNN,
+    searchKNN,
+    loadIndex,
+    saveIndex
 };
