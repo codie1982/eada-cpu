@@ -1,7 +1,7 @@
 {
   "name": "eada-cpu",
   "version": "1.0.0",
-  "description": "FAISS tabanlı hızlı KNN arama eklentisi",
+  "description": "FAISS-based high-performance KNN search addon for Node.js",
   "main": "index.js",
   "scripts": {
     "build": "bash build.sh",
