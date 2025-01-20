@@ -3,3 +3,6 @@ build/
 test/
 .vscode/
 docs/
+.DS_Store
+*.bin
+*.tgz

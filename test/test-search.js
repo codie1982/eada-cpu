@@ -1,19 +1,35 @@
 const eada = require('../build/Release/eada.node');
+const fs = require('fs');
 
-console.log("✅ FAISS Node.js eklentisi yüklendi!");
+test('KNN search should return valid results', async () => {
+    console.log("✅ FAISS Node.js eklentisi yüklendi!");
 
-// 📥 Kaydedilmiş Index Dosyasını Yükle
-console.log("📂 Kaydedilmiş index dosyadan yükleniyor...");
-const loadResult = eada.loadIndex("test_index.bin");
-console.log(loadResult);
+    const filename = "test_index.bin";
 
-// 🔹 KNN Arama için Rastgele Sorgu Vektörü
-const queryVector = Array.from({ length: 128 }, () => Math.random());
-const k = 5; // İlk 5 benzer vektörü bul
+    // 📌 Eğer dosya yoksa 2 saniye bekle
+    if (!fs.existsSync(filename)) {
+        console.log("⏳ Index dosyası henüz oluşturulmadı, bekleniyor...");
+        await new Promise(resolve => setTimeout(resolve, 2000));
+    }
 
-console.log("🔍 KNN Araması yapılıyor...");
-const searchResult = eada.searchKNN(queryVector, k);
-console.log("🎯 Arama Sonuçları:", searchResult);
+    console.log("📂 Kaydedilmiş index dosyadan yükleniyor...");
+    const loadResult = eada.loadIndex(filename);
+    console.log(loadResult);
 
-// ✅ Test Tamamlandı!
-console.log("🚀 KNN Arama testi başarıyla tamamlandı!");
+    expect(loadResult).toContain("✅");
+
+    const queryVector = Array.from({ length: 128 }, () => Math.random());
+    const k = 5;
+
+    console.log("🔍 KNN Araması yapılıyor...");
+    const searchResult = eada.searchKNN(queryVector, k);
+    console.log("🎯 Arama Sonuçları:", searchResult);
+
+    // ✅ Sonuçların doğru formatta olup olmadığını doğrula
+    expect(Array.isArray(searchResult)).toBe(true);
+    expect(searchResult.length).toBe(k);
+    expect(searchResult[0]).toHaveProperty("id");
+    expect(searchResult[0]).toHaveProperty("distance");
+
+    console.log("🚀 KNN Arama testi başarıyla tamamlandı!");
+});

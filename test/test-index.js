@@ -1,33 +1,39 @@
 const eada = require('../build/Release/eada.node');
+const fs = require('fs');
 
-console.log("✅ FAISS Node.js eklentisi yüklendi!");
+test('FAISS Index should be created, saved, and loaded', async () => {
+    console.log("✅ FAISS Node.js eklentisi yüklendi!");
 
-// 🔹 Index oluşturma ve veri ekleme
-const testData = Array.from({ length: 10 }, () =>
-    Array.from({ length: 128 }, () => Math.random())
-);
+    const testData = Array.from({ length: 10 }, () =>
+        Array.from({ length: 128 }, () => Math.random())
+    );
 
-console.log("🛠 Index oluşturuluyor...");
-const indexResult = eada.indexKNN(testData);
-console.log(indexResult);
+    console.log("🛠 Index oluşturuluyor...");
+    const indexResult = eada.indexKNN(testData);
+    console.log(indexResult);
 
-// 🔍 KNN Araması
-const queryVector = testData[0]; // İlk eklenen vektörü sorgula
-const k = 5; // İlk 5 benzer vektörü bul
+    expect(indexResult).toContain("✅");
 
-console.log("🔍 KNN Araması yapılıyor...");
-const searchResult = eada.searchKNN(queryVector, k);
-console.log("🎯 Arama Sonuçları:", searchResult);
+    // 📂 Indexi kaydet
+    console.log("💾 Index kaydediliyor...");
+    const filename = "test_index.bin";
+    const saveResult = eada.saveIndex(filename);
+    console.log(saveResult);
 
-// 📂 Indexi kaydetme
-console.log("💾 Index kaydediliyor...");
-const saveResult = eada.saveIndex("test_index.bin");
-console.log(saveResult);
+    expect(saveResult).toContain("✅");
 
-// 📂 Kaydedilmiş Indexi Yükleme
-console.log("📥 Index dosyadan yükleniyor...");
-const loadResult = eada.loadIndex("test_index.bin");
-console.log(loadResult);
+    // 📌 Dosyanın oluşturulmasını bekle (2 saniye)
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-// ✅ Test Tamamlandı!
-console.log("🚀 Tüm testler başarıyla tamamlandı!");
+    // 📂 Indexi tekrar yükle
+    console.log("📥 Index dosyadan yükleniyor...");
+    const loadResult = eada.loadIndex(filename);
+    console.log(loadResult);
+
+    expect(loadResult).toContain("✅");
+
+    // 📌 Dosyanın var olup olmadığını doğrula
+    expect(fs.existsSync(filename)).toBe(true);
+
+    console.log("🚀 Index oluşturma testi başarıyla tamamlandı!");
+});
