@@ -3,3 +3,7 @@ node_modules/
 *.bin
 build/
 eada-cpu-*.tgz
+
+# Ignore prebuilt binaries
+prebuilds/
+*.tar.gz
