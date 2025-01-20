@@ -1,8 +1,9 @@
 {
   "name": "eada-cpu",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "FAISS-based high-performance KNN search addon for Node.js",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "build": "cmake-js compile",
     "build:debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug",
@@ -56,6 +57,8 @@
   },
   "gypfile": true,
   "files": [
+    "index.js",
+    "index.d.ts",
     "src/",
     "binding.gyp",
     "package.json",
