@@ -1,6 +1,6 @@
 {
   "name": "eada-cpu",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "FAISS-based high-performance KNN search addon for Node.js",
   "main": "index.js",
   "types": "index.d.ts",
@@ -59,12 +59,10 @@
   "files": [
     "index.js",
     "index.d.ts",
-    "src/",
+    "prebuilds/",
     "binding.gyp",
     "package.json",
-    "README.md",
-    "build.sh",
-    "build/Release/eada.node"
+    "README.md"
   ],
   "binary": {
     "module_name": "eada-cpu",

@@ -1,4 +1,6 @@
-const eada = require("bindings")("eada");
+const path = require("path");
+const binaryPath = path.join(__dirname, "prebuilds", `eada.node`);
+const eada = require(binaryPath);
 
 /**
  * Adds data to the FAISS HNSW index.
