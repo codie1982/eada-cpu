@@ -1,16 +1,26 @@
 {
   "name": "eada-cpu",
   "version": "1.0.0",
+  "description": "FAISS tabanlı hızlı KNN arama eklentisi",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "./build.sh",
+    "test": "node test/test-index.js",
+    "search": "node test/test-search.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codie1982/eada-cpu.git"
+  },
+  "bugs": {
+  "url": "https://github.com/codie1982/eada-cpu.git/issues"
+  },
+  "homepage": "https://github.com/codie1982/eada-cpu.git#readme",
+  "keywords": ["faiss", "knn", "hnsw", "vector-search", "nodejs"],
+  "author": "Engin EROL",
   "dependencies": {
     "node-addon-api": "^5.0.0"
   },
   "gypfile": true,
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "license": "ISC"
 }
