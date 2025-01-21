@@ -1,15 +1,32 @@
 {
   "name": "eada-cpu",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "FAISS-based high-performance KNN search addon for Node.js",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "cmake-js compile",
-    "build:debug": "cmake-js compile -DCMAKE_BUILD_TYPE=Debug",
     "build:clean": "cmake-js clean",
-    "install": "prebuild-install --runtime napi --verbose || npm run build",
-    "prebuild-package": "prebuild --verbose --runtime napi --include-regex \"^(eada-cpu\\.node)|(faiss\\.dll)|(libfaiss\\.so)$\" --backend cmake-js",
+    "copy-build": "[ -d prebuilds ] || mkdir prebuilds && cp build/Release/eada.node prebuilds/eada-cpu-v$(node -p \"require('./package.json').version\")-napi-v10-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/x64/').node",
+
+
+
+    "build:prebuilds": "npm run build && npm run prebuild-package",
+
+    "prebuild-package": "prebuild --verbose --runtime napi --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
+
+    "prebuild-linux": "prebuild --verbose --runtime napi --target 23.6.0 --arch x64 --platform linux --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
+
+    "prebuild-win": "prebuild --verbose --runtime napi --target 23.6.0 --arch x64 --platform win32 --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
+
+    "prebuild-macos-intel": "prebuild --verbose --runtime napi --target 23.6.0 --arch x64 --platform darwin --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
+
+    "prebuild-macos-arm": "prebuild --verbose --runtime napi --target 23.6.0 --arch arm64 --platform darwin --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
+
+    "prebuild-all": "npm run prebuild-linux && npm run prebuild-win && npm run prebuild-macos-intel && npm run prebuild-macos-arm",
+
+    "install": "prebuild-install --runtime napi --verbose || npm run build && npm run copy-build",
+
     "test": "jest --passWithNoTests --testMatch '<rootDir>/test/**/*.js'",
     "doc": "typedoc --includeVersion"
   },
@@ -66,8 +83,8 @@
   ],
   "binary": {
     "module_name": "eada-cpu",
-    "module_path": "prebuilds/",
-    "napi_versions":  [3, 4, 5, 6, 7, 8, 9, 10, 115, 131]
+    "module_path": "prebuilds",
+    "napi_versions":  [3, 4, 5, 6, 7, 8, 9, 10]
   },
   "license": "ISC"
 }

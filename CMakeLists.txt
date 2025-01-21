@@ -22,14 +22,20 @@ execute_process(
 )
 
 execute_process(
-    COMMAND node -p "require('node-addon-api').gyp"
+    COMMAND node -p "require('node-addon-api').include"
     OUTPUT_VARIABLE NODE_GYP_DIR
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+execute_process(
+    COMMAND node -p "require('node-api-headers').include"
+    OUTPUT_VARIABLE NODE_API_HEADERS_DIR
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
 # **Node.js başlık dosyalarını ekleyelim**
 include_directories(${NODE_ADDON_API_DIR})
 include_directories(${NODE_GYP_DIR})
+include_directories(${NODE_API_HEADERS_DIR})
 include_directories(/usr/include/node) # Genel bir konum, değiştirebilirsin
 include_directories(${CMAKE_SOURCE_DIR}/node_modules/node-addon-api)
 include_directories(${CMAKE_SOURCE_DIR}/src)
@@ -71,11 +77,13 @@ else()
     )
 endif()
 
+# 📌 Prebuilds klasörünü otomatik oluştur
+install(CODE "file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/prebuilds)")
+
 # 📌 Eklenti dosyasını doğru dizine kur
 install(TARGETS eada 
     LIBRARY DESTINATION prebuilds
     RUNTIME DESTINATION prebuilds
 )
 
-# 📌 Prebuilds klasörünü otomatik oluştur
-install(CODE "file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/prebuilds)")
+
