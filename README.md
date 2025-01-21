@@ -72,7 +72,7 @@ const testData = Array.from({ length: 10 }, () =>
 );
 
 console.log("🛠 Creating a new index...");
-console.log(eada.indexKNN(testData));
+console.log(eada.addIndex(testData));
 ```
 
 ### **2️⃣ Perform a KNN Search**
@@ -81,17 +81,17 @@ const queryVector = testData[0]; // Use the first vector as the query
 const k = 5; // Find 5 nearest neighbors
 
 console.log("🔍 Performing KNN search...");
-const searchResults = eada.searchKNN(queryVector, k);
+const searchResults = eada.searchIndex(queryVector, k);
 console.log("🎯 Search Results:", searchResults);
 ```
 
 ### **3️⃣ Save and Load Index**
 ```javascript
 console.log("💾 Saving index...");
-eada.saveIndex("test_index.bin");
+eada.saveIndexFile("test_index.bin");
 
 console.log("📂 Loading saved index...");
-eada.loadIndex("test_index.bin");
+eada.loadIndexFile("test_index.bin");
 ```
 
 ---
@@ -100,11 +100,11 @@ eada.loadIndex("test_index.bin");
 ### **FAISS vs EADA Performance Comparison**
 | Metric | FAISS | EADA |
 |--------|-------|------|
-| Index Load Time | 3.118 sec | 3.118 sec |
-| KNN Search Time | 4.405 ms | 5.123 ms |
+| Index Load Time | - | 3.118 sec |
+| KNN Search Time | 5.123 ms | 4.405 ms |
 | Indexed Vectors | 7,000,000+ | 7,000,000+ |
 | Top-10 Search Results | ✅ Matched | ✅ Matched |
-| Total Indexing Time | 1:36:28 | 1:36:28 |
+| Total Indexing Time | - | 1:36:28 |
 
 #### **FAISS KNN Search Results**
 ```
