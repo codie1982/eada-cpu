@@ -1,14 +1,14 @@
 {
   "name": "eada-cpu",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "FAISS-based high-performance KNN search addon for Node.js",
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "cmake-js compile",
     "build:clean": "cmake-js clean",
-    "copy-build": "[ -d prebuilds ] || mkdir prebuilds && cp build/Release/eada.node prebuilds/eada-cpu-v$(node -p \"require('./package.json').version\")-napi-v10-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/x64/').node",
-
+    "copy-build": "[ -d prebuilds ] || mkdir prebuilds && [ -f build/Release/eada.node ] && cp build/Release/eada.node prebuilds/eada-cpu-v$(node -p \"require('./package.json').version\")-napi-v10-$(uname -s | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/x64/').node || echo 'Prebuilt binary already exists, skipping copy-build.'",
+    "install": "prebuild-install --runtime napi --verbose || (npm run build && npm run copy-build)",
 
 
     "build:prebuilds": "npm run build && npm run prebuild-package",
@@ -24,8 +24,6 @@
     "prebuild-macos-arm": "prebuild --verbose --runtime napi --target 23.6.0 --arch arm64 --platform darwin --include-regex \"^(eada-cpu-v[0-9]+\\.[0-9]+\\.[0-9]+-napi-v[0-9]+-[a-z0-9-]+\\.node)$\" --backend cmake-js",
 
     "prebuild-all": "npm run prebuild-linux && npm run prebuild-win && npm run prebuild-macos-intel && npm run prebuild-macos-arm",
-
-    "install": "prebuild-install --runtime napi --verbose || npm run build && npm run copy-build",
 
     "test": "jest --passWithNoTests --testMatch '<rootDir>/test/**/*.js'",
     "doc": "typedoc --includeVersion"
